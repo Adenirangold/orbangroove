@@ -41,25 +41,14 @@ function LoginForm() {
           label="Email Address"
           control={form.control}
         ></CustomInput>
-        <CustomInput
-          name="firstName"
-          type="text"
-          label="First Name"
-          control={form.control}
-        ></CustomInput>
-        <CustomInput
-          name="lastName"
-          type="text"
-          label="Last Name"
-          control={form.control}
-        ></CustomInput>
+
         <CustomInput
           type="password"
           name="password"
           label="Password"
           control={form.control}
         ></CustomInput>
-
+        {/* 
         <FormField
           control={form.control}
           name="gender"
@@ -93,7 +82,7 @@ function LoginForm() {
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
 
         <Button type="submit">Submit</Button>
       </form>
