@@ -19,9 +19,10 @@ interface CustomInput {
   name: FieldPath<z.infer<typeof authFormSchema>>;
   type?: string;
   label?: string;
+  description?: string;
 }
 
-function CustomInput({ control, name, label, type }: CustomInput) {
+function CustomInput({ control, name, label, type, description }: CustomInput) {
   return (
     <FormField
       control={control}
@@ -32,6 +33,7 @@ function CustomInput({ control, name, label, type }: CustomInput) {
           <FormControl>
             <Input type={type} {...field} />
           </FormControl>
+          <FormDescription>{description}</FormDescription>
 
           <FormMessage />
         </FormItem>

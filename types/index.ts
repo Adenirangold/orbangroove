@@ -2,10 +2,7 @@ import mongoose, { Schema, Document } from "mongoose";
 
 export interface AccountType extends Document {
   userId: mongoose.Schema.Types.ObjectId;
-  name: {
-    first: string;
-    last: string;
-  };
+
   address: {
     street: string;
     city: string;
@@ -36,14 +33,12 @@ export interface AccountType extends Document {
       cardHolderName: string;
     }
   ];
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export interface UserType {
   email: string;
-  password: string;
-
-  createdAt: Date;
-  updatedAt: Date;
+  password?: string;
+  firstName?: string;
+  lastName?: string;
+  gender?: string;
 }

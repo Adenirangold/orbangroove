@@ -8,10 +8,6 @@ const AccountSchema: Schema = new Schema(
       required: true,
     },
 
-    name: {
-      first: { type: String, required: true },
-      last: { type: String, required: true },
-    },
     address: {
       street: { type: String, required: true },
       city: { type: String, required: true },

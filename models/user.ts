@@ -12,7 +12,16 @@ const UserSchema: Schema = new Schema(
     },
     password: {
       type: String,
-      required: true,
+    },
+    firstName: {
+      type: String,
+    },
+    lastName: {
+      type: String,
+    },
+
+    gender: {
+      type: String,
     },
   },
   {
@@ -20,6 +29,7 @@ const UserSchema: Schema = new Schema(
   }
 );
 
-const User = mongoose.model<UserType>("User", UserSchema);
+const User =
+  mongoose.models.User || mongoose.model<UserType>("User", UserSchema);
 
 export default User;
