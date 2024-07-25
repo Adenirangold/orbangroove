@@ -25,6 +25,9 @@ export const {
     }),
   ],
   callbacks: {
+    authorized({ auth, request }) {
+      return !!auth?.user;
+    },
     async signIn({ user }): Promise<boolean> {
       try {
         await connectToDb();
@@ -52,6 +55,14 @@ export const {
 
         return false;
       }
+    },
+    async session({ session }) {
+      console.log(session);
+
+      const sessionUser = await User.findOne({ email: session.user.email });
+      session.user.id = sessionUser._id.toString();
+
+      return session;
     },
   },
 });

@@ -36,7 +36,7 @@ export interface AccountType extends Document {
 }
 
 export interface UserType {
-  email: string;
+  email?: string;
   password?: string;
   firstName?: string;
   lastName?: string;

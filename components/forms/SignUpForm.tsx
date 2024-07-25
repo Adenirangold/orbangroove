@@ -20,6 +20,7 @@ import {
 import CustomInput from "../CustomInput";
 import { authFormSchema } from "@/lib/utils";
 import { createUser } from "@/lib/action";
+import { redirect } from "next/navigation";
 
 function SignInForm() {
   const form = useForm<z.infer<typeof authFormSchema>>({
@@ -43,6 +44,7 @@ function SignInForm() {
       gender,
       lastName,
     });
+    redirect("/");
   }
 
   return (

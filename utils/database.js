@@ -9,7 +9,9 @@ export const connectToDb = async () => {
     return;
   }
   try {
-    await mongoose.connect(process.env.MONGODB_URL);
+    await mongoose.connect(process.env.MONGODB_URL, {
+      dbName: "orbangroove",
+    });
     isConnected = true;
     console.log("connected");
   } catch (err) {

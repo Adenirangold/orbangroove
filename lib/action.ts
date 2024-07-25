@@ -3,15 +3,24 @@ import { signIn, signOut } from "@/lib/auth";
 import User from "@/models/user";
 import { UserType } from "@/types";
 import { connectToDb } from "@/utils/database";
-import { hashed } from "./utils";
+import { compare, hashed } from "./utils";
+import { sign } from "jsonwebtoken";
+import { cookies } from "next/headers";
 
 export const signInAction = async function () {
-  await signIn("google");
+  await signIn("google", { redirectTo: "/" });
 };
 export const signOutAction = async function () {
+  cookies().set("token", "", {
+    httpOnly: true,
+    path: "/",
+    maxAge: 0,
+    sameSite: "strict",
+  });
   await signOut({
     redirectTo: "/mon",
   });
+
   console.log("signed out");
 };
 
@@ -35,5 +44,35 @@ export const createUser = async function ({
     console.log(user);
   } catch (err) {
     console.log(err);
+  }
+};
+
+export const login = async function ({ email, password }: UserType) {
+  try {
+    await connectToDb();
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      return { error: "Invalid credentials" };
+    }
+    const hashedPassword = user.password;
+    const isPasswordMatched = await compare(password, hashedPassword);
+
+    if (!isPasswordMatched) {
+      return { error: "credentials server error" };
+    }
+    const token = sign(
+      { userId: user._id, email: user.email },
+      process.env.JWT_SECRET!,
+      { expiresIn: "1h" }
+    );
+
+    cookies().set("token", token, {
+      httpOnly: true,
+      path: "/",
+      maxAge: 3600,
+      sameSite: "strict",
+    });
+  } catch (err) {
+    return { error: "Internal server error" };
   }
 };
