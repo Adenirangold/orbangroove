@@ -1,5 +1,5 @@
 "use server";
-import { signIn, signOut } from "@/lib/auth";
+
 import User from "@/models/user";
 import { UserType } from "@/types";
 import { connectToDb } from "@/utils/database";
@@ -7,18 +7,12 @@ import { compare, hashed } from "./utils";
 import { sign } from "jsonwebtoken";
 import { cookies } from "next/headers";
 
-export const signInAction = async function () {
-  await signIn("google", { redirectTo: "/" });
-};
 export const signOutAction = async function () {
   cookies().set("token", "", {
     httpOnly: true,
     path: "/",
     maxAge: 0,
     sameSite: "strict",
-  });
-  await signOut({
-    redirectTo: "/mon",
   });
 
   console.log("signed out");
@@ -72,6 +66,7 @@ export const login = async function ({ email, password }: UserType) {
       maxAge: 3600,
       sameSite: "strict",
     });
+    return { redirect: "/" };
   } catch (err) {
     return { error: "Internal server error" };
   }

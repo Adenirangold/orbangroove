@@ -11,8 +11,10 @@ import { Form } from "@/components/ui/form";
 import CustomInput from "../CustomInput";
 import { authFormSchema } from "@/lib/utils";
 import { login } from "@/lib/action";
+import { useRouter } from "next/navigation";
 
 function LoginForm() {
+  const router = useRouter();
   const form = useForm<z.infer<typeof authFormSchema>>({
     resolver: zodResolver(authFormSchema),
     defaultValues: {
@@ -24,7 +26,10 @@ function LoginForm() {
   async function onSubmit(values: z.infer<typeof authFormSchema>) {
     console.log(values);
     const { email, password } = values;
-    await login({ email, password });
+    const result = await login({ email, password });
+    if (result.redirect) {
+      router.push("/");
+    }
   }
 
   return (
