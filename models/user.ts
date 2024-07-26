@@ -23,6 +23,9 @@ const UserSchema: Schema = new Schema(
     gender: {
       type: String,
     },
+    dateOfBirth: {
+      type: String,
+    },
   },
   {
     timestamps: true,

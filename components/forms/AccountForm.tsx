@@ -13,7 +13,7 @@ import { authFormSchema } from "@/lib/utils";
 import { login } from "@/lib/action";
 import { useRouter } from "next/navigation";
 
-function LoginForm() {
+function AccountForm() {
   const router = useRouter();
 
   const form = useForm<z.infer<typeof authFormSchema>>({
@@ -60,4 +60,4 @@ function LoginForm() {
   );
 }
 
-export default LoginForm;
+export default AccountForm;

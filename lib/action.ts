@@ -24,6 +24,7 @@ export const createUser = async function ({
   email,
   password,
   gender,
+  dateOfBirth,
 }: UserType) {
   try {
     await connectToDb();
@@ -34,10 +35,13 @@ export const createUser = async function ({
       email,
       gender,
       password: hashedPassword,
+      dateOfBirth,
     });
-    console.log(user);
+
+    return { redirect: "/login" };
   } catch (err) {
     console.log(err);
+    return { error: "Internal server error" };
   }
 };
 
@@ -52,7 +56,7 @@ export const login = async function ({ email, password }: UserType) {
     const isPasswordMatched = await compare(password, hashedPassword);
 
     if (!isPasswordMatched) {
-      return { error: "credentials server error" };
+      return { error: "Invalid credentials" };
     }
     const token = sign(
       { userId: user._id, email: user.email },
@@ -69,5 +73,15 @@ export const login = async function ({ email, password }: UserType) {
     return { redirect: "/" };
   } catch (err) {
     return { error: "Internal server error" };
+  }
+};
+
+export const resetPassword = async (email: UserType) => {
+  const user = await User.findOne({ email: email });
+  if (!user) {
+    return {
+      error:
+        "The user with this email address does not exist. Try signing up with this email",
+    };
   }
 };

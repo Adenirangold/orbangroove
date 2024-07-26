@@ -20,9 +20,13 @@ import {
 import CustomInput from "../CustomInput";
 import { authFormSchema } from "@/lib/utils";
 import { createUser } from "@/lib/action";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
+import CustomSelect from "../CustomSelect";
+import { daysArray, monthsArray, yearsArray } from "@/constant";
 
 function SignInForm() {
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof authFormSchema>>({
     resolver: zodResolver(authFormSchema),
     defaultValues: {
@@ -36,15 +40,24 @@ function SignInForm() {
 
   async function onSubmit(values: z.infer<typeof authFormSchema>) {
     console.log(values);
-    const { firstName, gender, email, password, lastName } = values;
-    await createUser({
+    const { firstName, gender, email, password, lastName, date, months, year } =
+      values;
+
+    const dateCombined = `${date}|${months}|${year}`;
+    console.log(dateCombined);
+
+    const result = await createUser({
       email,
       password,
       firstName,
       gender,
       lastName,
+      dateOfBirth: dateCombined,
     });
-    redirect("/");
+
+    if (result?.redirect) {
+      router.push("/");
+    }
   }
 
   return (
@@ -77,6 +90,27 @@ function SignInForm() {
             description="Must be 8 or more characters"
             control={form.control}
           ></CustomInput>
+
+          <div className="flex gap-4">
+            <CustomSelect
+              control={form.control}
+              placeholder="DD"
+              name="date"
+              items={daysArray}
+            ></CustomSelect>
+            <CustomSelect
+              control={form.control}
+              placeholder="Months"
+              name="months"
+              items={monthsArray}
+            ></CustomSelect>
+            <CustomSelect
+              control={form.control}
+              placeholder="YYYY"
+              name="year"
+              items={yearsArray}
+            ></CustomSelect>
+          </div>
 
           <FormField
             control={form.control}

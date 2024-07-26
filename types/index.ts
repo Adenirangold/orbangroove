@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-export interface AccountType extends Document {
+export interface AccountType {
   userId: mongoose.Schema.Types.ObjectId;
 
   address: {
@@ -41,4 +41,5 @@ export interface UserType {
   firstName?: string;
   lastName?: string;
   gender?: string;
+  dateOfBirth?: string;
 }

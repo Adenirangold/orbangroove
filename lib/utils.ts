@@ -13,6 +13,9 @@ export const authFormSchema = z.object({
   password: z.string().min(8).optional(),
   email: z.string().email().optional(),
   gender: z.string().optional(),
+  date: z.string().optional(),
+  months: z.string().optional(),
+  year: z.string().optional(),
 });
 
 export const loginSchema = z.object({
