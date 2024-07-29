@@ -1,12 +1,9 @@
 "use client";
 import React from "react";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -16,10 +13,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-
 import CustomInput from "../CustomInput";
 import { authFormSchema } from "@/lib/utils";
-import { createUser } from "@/lib/action";
+import { createUser, getUser } from "@/lib/action";
 import { useRouter } from "next/navigation";
 import CustomSelect from "../CustomSelect";
 import { daysArray, monthsArray, yearsArray } from "@/constant";

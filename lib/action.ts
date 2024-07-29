@@ -3,9 +3,11 @@
 import User from "@/models/user";
 import { UserType } from "@/types";
 import { connectToDb } from "@/utils/database";
-import { compare, hashed } from "./utils";
+import { compare, hashed, verifyToken } from "./utils";
 import { sign } from "jsonwebtoken";
 import { cookies } from "next/headers";
+import { log } from "console";
+import { jwtVerify } from "jose";
 
 export const signOutAction = async function () {
   cookies().set("token", "", {
@@ -84,4 +86,17 @@ export const resetPassword = async (email: UserType) => {
         "The user with this email address does not exist. Try signing up with this email",
     };
   }
+};
+
+export const getUser = async () => {
+  const token = cookies().get("token")?.value;
+  await connectToDb();
+  const payload = await verifyToken(token!);
+  const user = await User.findById(payload.userId);
+  console.log(user);
+
+  if (!user) {
+    return { error: "Invalid Token" };
+  }
+  return user;
 };

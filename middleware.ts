@@ -1,6 +1,5 @@
-import { jwtVerify } from "jose";
-
 import { NextRequest, NextResponse } from "next/server";
+import { verifyToken } from "./lib/utils";
 
 export async function middleware(request: NextRequest) {
   const token = request.cookies.get("token")?.value;
@@ -10,7 +9,7 @@ export async function middleware(request: NextRequest) {
   }
 
   try {
-    await jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET));
+    await verifyToken(token);
     return NextResponse.next();
   } catch (error) {
     console.error("Invalid token:", error);
