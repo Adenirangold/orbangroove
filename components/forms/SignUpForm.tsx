@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -15,22 +15,24 @@ import {
 } from "@/components/ui/form";
 import CustomInput from "../CustomInput";
 import { authFormSchema } from "@/lib/utils";
-import { createUser, getUser } from "@/lib/action";
+import { createUser } from "@/lib/action";
 import { useRouter } from "next/navigation";
 import CustomSelect from "../CustomSelect";
 import { daysArray, monthsArray, yearsArray } from "@/constant";
+import { UserType } from "@/types";
 
-function SignInForm() {
+function SignInForm({ type, data }: { type: string; data: UserType }) {
   const router = useRouter();
+  const { email, lastName, firstName, gender, dateOfBirth } = data;
 
   const form = useForm<z.infer<typeof authFormSchema>>({
     resolver: zodResolver(authFormSchema),
     defaultValues: {
-      email: "",
+      email: type === "update" ? email : "",
       password: "",
-      gender: "",
-      lastName: "",
-      firstName: "",
+      gender: type === "update" ? gender : "",
+      lastName: type === "update" ? lastName : "",
+      firstName: type === "update" ? firstName : "",
     },
   });
 
@@ -79,30 +81,35 @@ function SignInForm() {
             label="Last Name"
             control={form.control}
           ></CustomInput>
-          <CustomInput
-            type="password"
-            name="password"
-            label="Password"
-            description="Must be 8 or more characters"
-            control={form.control}
-          ></CustomInput>
+          {type === "update" ?? (
+            <CustomInput
+              type="password"
+              name="password"
+              label="Password"
+              description="Must be 8 or more characters"
+              control={form.control}
+            ></CustomInput>
+          )}
 
           <div className="flex gap-4">
             <CustomSelect
               control={form.control}
               placeholder="DD"
               name="date"
+              defaultVal={dateOfBirth?.split("|")[0]}
               items={daysArray}
             ></CustomSelect>
             <CustomSelect
               control={form.control}
               placeholder="Months"
               name="months"
+              defaultVal={dateOfBirth?.split("|")[1]}
               items={monthsArray}
             ></CustomSelect>
             <CustomSelect
               control={form.control}
               placeholder="YYYY"
+              defaultVal={dateOfBirth?.split("|")[2]}
               name="year"
               items={yearsArray}
             ></CustomSelect>

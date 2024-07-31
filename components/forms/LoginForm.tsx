@@ -24,14 +24,11 @@ function LoginForm() {
     },
   });
 
-  console.log(form.formState);
-
   async function onSubmit(values: z.infer<typeof authFormSchema>) {
-    console.log(values);
     const { email, password } = values;
     const result = await login({ email, password });
     if (result.redirect) {
-      router.push("/");
+      router.push(result.redirect);
     }
   }
 

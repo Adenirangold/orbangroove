@@ -12,6 +12,7 @@ const UserSchema: Schema = new Schema(
     },
     password: {
       type: String,
+      select: false,
     },
     firstName: {
       type: String,

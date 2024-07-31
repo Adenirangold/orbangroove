@@ -24,15 +24,25 @@ interface SelectInput {
   name: FieldPath<z.infer<typeof authFormSchema>>;
   items?: string[];
   placeholder?: string;
+  defaultVal?: string;
 }
-function CustomSelect({ control, items, name, placeholder }: SelectInput) {
+function CustomSelect({
+  control,
+  items,
+  name,
+  placeholder,
+  defaultVal,
+}: SelectInput) {
   return (
     <FormField
       control={control}
       name={name}
       render={({ field }) => (
         <FormItem>
-          <Select onValueChange={field.onChange} defaultValue={field.value}>
+          <Select
+            onValueChange={field.onChange}
+            defaultValue={defaultVal ? defaultVal : field.value}
+          >
             <FormControl>
               <SelectTrigger>
                 <SelectValue placeholder={placeholder} />

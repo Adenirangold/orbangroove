@@ -50,7 +50,8 @@ export const createUser = async function ({
 export const login = async function ({ email, password }: UserType) {
   try {
     await connectToDb();
-    const user = await User.findOne({ email: email });
+    const user = await User.findOne({ email: email }).select("+password");
+
     if (!user) {
       return { error: "Invalid credentials" };
     }
@@ -93,7 +94,7 @@ export const getUser = async () => {
   await connectToDb();
   const payload = await verifyToken(token!);
   const user = await User.findById(payload.userId);
-  console.log(user);
+  // console.log(user);
 
   if (!user) {
     return { error: "Invalid Token" };
