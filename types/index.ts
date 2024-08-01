@@ -42,4 +42,5 @@ export interface UserType {
   lastName?: string;
   gender?: string;
   dateOfBirth?: string;
+  id?: string;
 }

@@ -6,8 +6,6 @@ import { connectToDb } from "@/utils/database";
 import { compare, hashed, verifyToken } from "./utils";
 import { sign } from "jsonwebtoken";
 import { cookies } from "next/headers";
-import { log } from "console";
-import { jwtVerify } from "jose";
 
 export const signOutAction = async function () {
   cookies().set("token", "", {
@@ -46,6 +44,35 @@ export const createUser = async function ({
     return { error: "Internal server error" };
   }
 };
+export async function updateUser({
+  lastName,
+  firstName,
+  email,
+  password,
+  gender,
+  dateOfBirth,
+  id,
+}: UserType) {
+  try {
+    await connectToDb();
+    const result = await User.updateOne(
+      { _id: id },
+      {
+        lastName,
+        firstName,
+        email,
+        password,
+        gender,
+        dateOfBirth,
+      }
+    );
+    return result;
+  } catch (error) {
+    console.log(error);
+
+    return { error: "Invalid credentials" };
+  }
+}
 
 export const login = async function ({ email, password }: UserType) {
   try {
@@ -64,7 +91,7 @@ export const login = async function ({ email, password }: UserType) {
     const token = sign(
       { userId: user._id, email: user.email },
       process.env.JWT_SECRET!,
-      { expiresIn: "1h" }
+      { expiresIn: "20h" }
     );
 
     cookies().set("token", token, {

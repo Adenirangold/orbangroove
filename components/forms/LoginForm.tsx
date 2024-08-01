@@ -26,6 +26,8 @@ function LoginForm() {
 
   async function onSubmit(values: z.infer<typeof authFormSchema>) {
     const { email, password } = values;
+    console.log(values);
+
     const result = await login({ email, password });
     if (result.redirect) {
       router.push(result.redirect);
@@ -50,7 +52,7 @@ function LoginForm() {
             control={form.control}
           ></CustomInput>
 
-          <Button type="submit">Submitting</Button>
+          <Button type="submit">Log In</Button>
         </form>
       </Form>
     </div>

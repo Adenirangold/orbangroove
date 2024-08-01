@@ -9,19 +9,17 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const authFormSchema = z.object({
-  firstName: z.string().optional(),
-  lastName: z.string().optional(),
-  password: z.string().min(8).optional(),
-  email: z.string().email().optional(),
+  email: z.string().email("Please enter a valid email address").optional(),
+  firstName: z.string().min(1, "First name is required").optional(),
+  lastName: z.string().min(1, "Last name is required").optional(),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters long")
+    .optional(),
   gender: z.string().optional(),
-  date: z.string().optional(),
-  months: z.string().optional(),
-  year: z.string().optional(),
-});
-
-export const loginSchema = z.object({
-  password: z.string().min(8),
-  email: z.string().email(),
+  date: z.string().min(1, "Please select a day").optional(),
+  months: z.string().min(1, "Please select a month").optional(),
+  year: z.string().min(1, "Please select a year").optional(),
 });
 
 export async function hashed(data: any) {

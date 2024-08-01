@@ -19,8 +19,9 @@ import { createUser, getUser } from "@/lib/action";
 import { useRouter } from "next/navigation";
 import CustomSelect from "../CustomSelect";
 import { daysArray, monthsArray, yearsArray } from "@/constant";
+import { UserType } from "@/types";
 
-function SignInForm() {
+function UpdateUserForm({}) {
   const router = useRouter();
 
   const form = useForm<z.infer<typeof authFormSchema>>({
@@ -152,4 +153,4 @@ function SignInForm() {
   );
 }
 
-export default SignInForm;
+export default UpdateUserForm;
