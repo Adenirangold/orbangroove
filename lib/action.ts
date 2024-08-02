@@ -121,7 +121,6 @@ export const getUser = async () => {
   await connectToDb();
   const payload = await verifyToken(token!);
   const user = await User.findById(payload.userId);
-  // console.log(user);
 
   if (!user) {
     return { error: "Invalid Token" };

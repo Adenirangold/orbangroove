@@ -1,5 +1,6 @@
 import UpdateUserForm from "@/components/forms/UpdateUserForm";
 import { getUser } from "@/lib/action";
+import { UserType } from "@/types";
 import React from "react";
 
 async function page() {
@@ -11,8 +12,8 @@ async function page() {
     firstName: data.firstName,
     lastName: data.lastName,
     dateOfBirth: data.dateOfBirth,
+    gender: data.gender,
   };
-  console.log(user);
 
   return (
     <div className="mt-10 flex flex-col gap-10 justify-center items-center w-full h-full">

@@ -19,19 +19,27 @@ import { createUser, getUser } from "@/lib/action";
 import { useRouter } from "next/navigation";
 import CustomSelect from "../CustomSelect";
 import { daysArray, monthsArray, yearsArray } from "@/constant";
-import { UserType } from "@/types";
 
-function UpdateUserForm({}) {
+interface UserProp {
+  id: string | undefined;
+  email: string;
+  firstName: string;
+  lastName: string;
+  gender: string;
+  dateOfBirth: string | Date;
+}
+
+function UpdateUserForm({ user }: { user: UserProp }) {
   const router = useRouter();
 
   const form = useForm<z.infer<typeof authFormSchema>>({
     resolver: zodResolver(authFormSchema),
     defaultValues: {
-      email: "",
+      email: user.email,
       password: "",
-      gender: "",
-      lastName: "",
-      firstName: "",
+      gender: user.gender,
+      lastName: user.lastName,
+      firstName: user.firstName,
     },
   });
 
