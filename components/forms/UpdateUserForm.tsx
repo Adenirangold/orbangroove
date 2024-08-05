@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/form";
 import CustomInput from "../CustomInput";
 import { authFormSchema } from "@/lib/utils";
-import { createUser, getUser } from "@/lib/action";
+import { updateUser } from "@/lib/action";
 import { useRouter } from "next/navigation";
 import CustomSelect from "../CustomSelect";
 import { daysArray, monthsArray, yearsArray } from "@/constant";
@@ -26,42 +26,47 @@ interface UserProp {
   firstName: string;
   lastName: string;
   gender: string;
-  dateOfBirth: string | Date;
+  dateOfBirth: string;
 }
 
 function UpdateUserForm({ user }: { user: UserProp }) {
   const router = useRouter();
 
+  const { email, gender, lastName, firstName, dateOfBirth, id } = user;
+
+  const [date, months, year] = dateOfBirth?.split("|") || [];
+
   const form = useForm<z.infer<typeof authFormSchema>>({
     resolver: zodResolver(authFormSchema),
     defaultValues: {
-      email: user.email,
-      password: "",
-      gender: user.gender,
-      lastName: user.lastName,
-      firstName: user.firstName,
+      email: email,
+      gender: gender,
+      lastName: lastName,
+      firstName: firstName,
+      date: date,
+      months: months,
+      year: year,
     },
   });
 
   async function onSubmit(values: z.infer<typeof authFormSchema>) {
     console.log(values);
-    const { firstName, gender, email, password, lastName, date, months, year } =
-      values;
+    const { firstName, gender, email, lastName, date, months, year } = values;
 
     const dateCombined = `${date}|${months}|${year}`;
-    console.log(dateCombined);
 
-    const result = await createUser({
-      email,
-      password,
-      firstName,
-      gender,
-      lastName,
-      dateOfBirth: dateCombined,
-    });
-
-    if (result?.redirect) {
-      router.push("/");
+    try {
+      await updateUser({
+        firstName,
+        lastName,
+        gender,
+        email,
+        dateOfBirth: dateCombined,
+        id,
+      });
+      console.log("updated already");
+    } catch {
+      console.log("Unable to Update User");
     }
   }
 
@@ -70,6 +75,7 @@ function UpdateUserForm({ user }: { user: UserProp }) {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <CustomInput
+            disabled
             name="email"
             type="email"
             label="Email Address"
@@ -86,13 +92,6 @@ function UpdateUserForm({ user }: { user: UserProp }) {
             type="text"
             name="lastName"
             label="Last Name"
-            control={form.control}
-          ></CustomInput>
-          <CustomInput
-            type="password"
-            name="password"
-            label="Password"
-            description="Must be 8 or more characters"
             control={form.control}
           ></CustomInput>
 
@@ -154,7 +153,7 @@ function UpdateUserForm({ user }: { user: UserProp }) {
             )}
           />
 
-          <Button type="submit">Submit</Button>
+          <Button type="submit">Save Changes</Button>
         </form>
       </Form>
     </div>

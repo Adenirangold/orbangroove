@@ -5,14 +5,18 @@ import React from "react";
 
 async function page() {
   const data = await getUser();
+  if (!data) {
+    console.log("Token expired");
+    return;
+  }
 
   const user = {
-    id: data._id?.toString(),
-    email: data.email,
-    firstName: data.firstName,
-    lastName: data.lastName,
-    dateOfBirth: data.dateOfBirth,
-    gender: data.gender,
+    id: data?._id?.toString(),
+    email: data?.email,
+    firstName: data?.firstName,
+    lastName: data?.lastName,
+    dateOfBirth: data?.dateOfBirth,
+    gender: data?.gender,
   };
 
   return (

@@ -20,13 +20,22 @@ interface CustomInput {
   type?: string;
   label?: string;
   description?: string;
+  disabled?: boolean;
 }
 
-function CustomInput({ control, name, label, type, description }: CustomInput) {
+function CustomInput({
+  control,
+  name,
+  label,
+  type,
+  description,
+  disabled,
+}: CustomInput) {
   return (
     <FormField
       control={control}
       name={name}
+      disabled={disabled}
       render={({ field }) => (
         <FormItem>
           <FormLabel>{label}</FormLabel>

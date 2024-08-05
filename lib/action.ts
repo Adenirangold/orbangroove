@@ -8,12 +8,7 @@ import { sign } from "jsonwebtoken";
 import { cookies } from "next/headers";
 
 export const signOutAction = async function () {
-  cookies().set("token", "", {
-    httpOnly: true,
-    path: "/",
-    maxAge: 0,
-    sameSite: "strict",
-  });
+  cookies().delete("token");
 
   console.log("signed out");
 };
@@ -48,7 +43,6 @@ export async function updateUser({
   lastName,
   firstName,
   email,
-  password,
   gender,
   dateOfBirth,
   id,
@@ -61,7 +55,7 @@ export async function updateUser({
         lastName,
         firstName,
         email,
-        password,
+
         gender,
         dateOfBirth,
       }
@@ -97,7 +91,7 @@ export const login = async function ({ email, password }: UserType) {
     cookies().set("token", token, {
       httpOnly: true,
       path: "/",
-      maxAge: 3600,
+      maxAge: 1 * 24 * 60 * 60,
       sameSite: "strict",
     });
     return { redirect: "/" };
@@ -106,24 +100,19 @@ export const login = async function ({ email, password }: UserType) {
   }
 };
 
-export const resetPassword = async (email: UserType) => {
-  const user = await User.findOne({ email: email });
-  if (!user) {
-    return {
-      error:
-        "The user with this email address does not exist. Try signing up with this email",
-    };
-  }
-};
-
 export const getUser = async () => {
-  const token = cookies().get("token")?.value;
-  await connectToDb();
-  const payload = await verifyToken(token!);
-  const user = await User.findById(payload.userId);
+  try {
+    const token = cookies().get("token")?.value;
+    await connectToDb();
+    const payload = await verifyToken(token!);
+    const user = await User.findById(payload.userId);
 
-  if (!user) {
+    if (!user) {
+      return { error: "Invalid Token" };
+    }
+    return user;
+  } catch (err) {
+    console.log("No User Found");
     return { error: "Invalid Token" };
   }
-  return user;
 };
