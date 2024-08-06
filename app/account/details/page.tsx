@@ -1,5 +1,5 @@
 import UpdateUserForm from "@/components/forms/UpdateUserForm";
-import { getUser } from "@/lib/action";
+import { getUser } from "@/actions/userAction";
 import { UserType } from "@/types";
 import React from "react";
 

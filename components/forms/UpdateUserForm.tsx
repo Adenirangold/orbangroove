@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/form";
 import CustomInput from "../CustomInput";
 import { authFormSchema } from "@/lib/utils";
-import { updateUser } from "@/lib/action";
+import { updateUser } from "@/actions/userAction";
 import { useRouter } from "next/navigation";
 import CustomSelect from "../CustomSelect";
 import { daysArray, monthsArray, yearsArray } from "@/constant";
@@ -48,6 +48,8 @@ function UpdateUserForm({ user }: { user: UserProp }) {
       year: year,
     },
   });
+  const { isDirty } = form.formState;
+  console.log(isDirty);
 
   async function onSubmit(values: z.infer<typeof authFormSchema>) {
     console.log(values);
@@ -153,7 +155,9 @@ function UpdateUserForm({ user }: { user: UserProp }) {
             )}
           />
 
-          <Button type="submit">Save Changes</Button>
+          <Button disabled={!isDirty} type="submit">
+            Save Changes
+          </Button>
         </form>
       </Form>
     </div>

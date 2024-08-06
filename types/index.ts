@@ -44,3 +44,10 @@ export interface UserType {
   dateOfBirth?: string;
   id?: string;
 }
+
+export interface SendEmailActionParams {
+  to: string;
+  subject: string;
+  text: string;
+  html: string;
+}
