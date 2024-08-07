@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/form";
 import CustomInput from "../CustomInput";
 import { authFormSchema } from "@/lib/utils";
-import { createUser, getUser } from "@/lib/action";
+import { createUser, getUser } from "@/actions/userAction";
 import { useRouter } from "next/navigation";
 import CustomSelect from "../CustomSelect";
 import { daysArray, monthsArray, yearsArray } from "@/constant";

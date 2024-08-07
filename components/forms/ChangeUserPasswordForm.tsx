@@ -10,28 +10,24 @@ import { Form } from "@/components/ui/form";
 
 import CustomInput from "../CustomInput";
 import { authFormSchema } from "@/lib/utils";
-import { login } from "@/actions/userAction";
 import { useRouter } from "next/navigation";
+import { changePassword } from "@/actions/userAction";
 
-function LoginForm() {
+function ChangeUserPasswordForm() {
   const router = useRouter();
-
   const form = useForm<z.infer<typeof authFormSchema>>({
     resolver: zodResolver(authFormSchema),
     defaultValues: {
-      email: "",
       password: "",
+      newPassword: "",
+      confirmNewPassword: "",
     },
   });
 
   async function onSubmit(values: z.infer<typeof authFormSchema>) {
-    const { email, password } = values;
     console.log(values);
-
-    const result = await login({ email, password });
-    if (result.redirect) {
-      router.push(result.redirect);
-    }
+    const { password, newPassword } = values;
+    await changePassword({ password, newPassword });
   }
 
   return (
@@ -39,24 +35,29 @@ function LoginForm() {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <CustomInput
-            name="email"
-            type="email"
-            label="Email Address"
-            control={form.control}
-          ></CustomInput>
-
-          <CustomInput
-            type="password"
             name="password"
-            label="Password"
+            type="password"
+            label="Current Password"
+            control={form.control}
+          ></CustomInput>
+          <CustomInput
+            name="newPassword"
+            type="password"
+            label="New Password"
+            control={form.control}
+          ></CustomInput>
+          <CustomInput
+            name="confirmNewPassword"
+            type="password"
+            label="Confirm New Password"
             control={form.control}
           ></CustomInput>
 
-          <Button type="submit">Log In</Button>
+          <Button type="submit">Submit</Button>
         </form>
       </Form>
     </div>
   );
 }
 
-export default LoginForm;
+export default ChangeUserPasswordForm;

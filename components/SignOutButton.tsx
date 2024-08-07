@@ -1,4 +1,4 @@
-import { signOutAction } from "@/lib/action";
+import { signOutAction } from "@/actions/userAction";
 import React from "react";
 
 function SignOutButton() {

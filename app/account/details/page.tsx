@@ -1,10 +1,11 @@
 import UpdateUserForm from "@/components/forms/UpdateUserForm";
 import { getUser } from "@/actions/userAction";
-import { UserType } from "@/types";
+
 import React from "react";
 
 async function page() {
   const data = await getUser();
+
   if (!data) {
     console.log("Token expired");
     return;

@@ -21,11 +21,26 @@ export const authFormSchema = z
     date: z.string().min(1, "Please select a day").optional(),
     months: z.string().min(1, "Please select a month").optional(),
     year: z.string().min(1, "Please select a year").optional(),
+    currentPassword: z.string().optional(),
+    newPassword: z.string().optional(),
+    confirmNewPassword: z.string().optional(),
   })
   .refine((data) => (data.password ? data.password.length >= 8 : true), {
     message: "Password must be at least 8 characters long",
     path: ["password"],
-  });
+  })
+  .refine(
+    (data) => {
+      if (data.newPassword && data.confirmNewPassword) {
+        return data.newPassword === data.confirmNewPassword;
+      }
+      return true;
+    },
+    {
+      message: "Passwords do not match",
+      path: ["confirmNewPassword"],
+    }
+  );
 
 export async function hashed(data: any) {
   const salt = await bcrypt.genSalt(10);

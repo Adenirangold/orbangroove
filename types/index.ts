@@ -43,6 +43,8 @@ export interface UserType {
   gender?: string;
   dateOfBirth?: string;
   id?: string;
+  newPassword?: string;
+  confirmNewPassword?: string;
 }
 
 export interface SendEmailActionParams {

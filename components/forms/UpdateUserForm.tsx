@@ -49,7 +49,6 @@ function UpdateUserForm({ user }: { user: UserProp }) {
     },
   });
   const { isDirty } = form.formState;
-  console.log(isDirty);
 
   async function onSubmit(values: z.infer<typeof authFormSchema>) {
     console.log(values);

@@ -5,6 +5,7 @@ import { UserType } from "@/types";
 import { connectToDb } from "@/utils/database";
 import { sign } from "jsonwebtoken";
 import { cookies } from "next/headers";
+import { sendEmailAction } from "./sendEmailAction";
 
 export const createUser = async function ({
   lastName,
@@ -71,23 +72,6 @@ export const signOutAction = async function () {
   console.log("signed out");
 };
 
-export const getUser = async () => {
-  try {
-    const token = cookies().get("token")?.value;
-    await connectToDb();
-    const payload = await verifyToken(token!);
-    const user = await User.findById(payload.userId);
-
-    if (!user) {
-      return { error: "Invalid Token" };
-    }
-    return user;
-  } catch (err) {
-    console.log("No User Found");
-    return { error: "Invalid Token" };
-  }
-};
-
 export async function updateUser({
   lastName,
   firstName,
@@ -114,5 +98,50 @@ export async function updateUser({
     console.log(error);
 
     return { error: "Invalid credentials" };
+  }
+}
+export const getUser = async () => {
+  try {
+    const token = cookies().get("token")?.value;
+    await connectToDb();
+    const payload = await verifyToken(token!);
+    const user = await User.findById(payload.userId);
+
+    if (!user) {
+      return { error: "Invalid Token" };
+    }
+    return user;
+  } catch (err) {
+    console.log("No User Found");
+    return { error: "Invalid Token" };
+  }
+};
+
+export async function changePassword({ password, newPassword }: UserType) {
+  try {
+    const signedUser = await getUser();
+    if (!signedUser) {
+      console.log("user not logged in");
+      return { error: "User Not Logged In" };
+    }
+    const user = await User.findOne({ email: signedUser.email }).select(
+      "password"
+    );
+    if (!user) {
+      console.log("user does not exist");
+      return { error: "User does not exist" };
+    }
+    const passwordMatch = await compare(password, user?.password);
+    if (!passwordMatch) {
+      console.log("current password is not correct");
+      return { error: "current password is not correct" };
+    }
+    const hashedPassword = await hashed(newPassword);
+    await User.findOneAndUpdate(
+      { email: signedUser.email },
+      { password: hashedPassword }
+    );
+  } catch (error) {
+    console.log("error in changing password");
   }
 }
