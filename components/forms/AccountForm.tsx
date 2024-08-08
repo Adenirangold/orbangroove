@@ -14,20 +14,25 @@ import { authFormSchema } from "@/lib/utils";
 import CustomSelect from "../CustomSelect";
 import { countryName } from "@/constant/countries";
 import { createAccount } from "@/actions/accountAction";
-import { UserType } from "@/types";
-import mongoose, { Types } from "mongoose";
+import { AccountType, UserType } from "@/types";
 
-function AccountForm({ user }: { user: UserType }) {
+function AccountForm({
+  user,
+  account,
+}: {
+  user: UserType;
+  account: AccountType;
+}) {
   const form = useForm<z.infer<typeof authFormSchema>>({
     resolver: zodResolver(authFormSchema),
     defaultValues: {
       firstName: user?.firstName,
       lastName: user?.lastName,
-      mobileNumber: "",
-      address: "",
-      city: "",
-      postalCode: "",
-      country: "",
+      mobileNumber: account ? account.mobileNumber : "",
+      address: account ? account.address : "",
+      city: account ? account.city : "",
+      postalCode: account ? account.postalCode : "",
+      country: account ? account.country : "",
     },
   });
 

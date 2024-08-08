@@ -26,3 +26,13 @@ export const createAccount = async ({
     console.log(err);
   }
 };
+
+export const getAccount = async (userId: UserType) => {
+  try {
+    await connectToDb();
+    const account = await Account.findOne({ userId: userId });
+    return account;
+  } catch (err) {
+    console.log("Gettin user imposible");
+  }
+};
