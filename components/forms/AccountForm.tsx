@@ -10,28 +10,41 @@ import { Form } from "@/components/ui/form";
 
 import CustomInput from "../CustomInput";
 import { authFormSchema } from "@/lib/utils";
-import { login } from "@/lib/action";
-import { useRouter } from "next/navigation";
 
-function AccountForm() {
-  const router = useRouter();
+import CustomSelect from "../CustomSelect";
+import { countryName } from "@/constant/countries";
+import { createAccount } from "@/actions/accountAction";
+import { UserType } from "@/types";
+import mongoose, { Types } from "mongoose";
 
+function AccountForm({ user }: { user: UserType }) {
   const form = useForm<z.infer<typeof authFormSchema>>({
     resolver: zodResolver(authFormSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      firstName: user?.firstName,
+      lastName: user?.lastName,
+      mobileNumber: "",
+      address: "",
+      city: "",
+      postalCode: "",
+      country: "",
     },
   });
 
-  console.log(form.formState);
-
   async function onSubmit(values: z.infer<typeof authFormSchema>) {
     console.log(values);
-    const { email, password } = values;
-    const result = await login({ email, password });
-    if (result.redirect) {
-      router.push("/");
+    const { city, address, country, mobileNumber, postalCode } = values;
+    try {
+      await createAccount({
+        userId: user.id,
+        city,
+        country,
+        address,
+        mobileNumber,
+        postalCode,
+      });
+    } catch (err) {
+      console.log(err);
     }
   }
 
@@ -40,20 +53,52 @@ function AccountForm() {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <CustomInput
-            name="email"
-            type="email"
-            label="Email Address"
+            name="firstName"
+            disabled
+            type="text"
+            label="First Name"
             control={form.control}
           ></CustomInput>
-
           <CustomInput
-            type="password"
-            name="password"
-            label="Password"
+            disabled
+            name="lastName"
+            type="text"
+            label="Last Name"
+            control={form.control}
+          ></CustomInput>
+          <CustomInput
+            name="mobileNumber"
+            type="number"
+            label="Mobile"
+            control={form.control}
+          ></CustomInput>
+          <CustomSelect
+            control={form.control}
+            placeholder="Please select"
+            name="country"
+            label="Country"
+            items={countryName}
+          ></CustomSelect>
+          <CustomInput
+            name="address"
+            type="text"
+            label="Address"
+            control={form.control}
+          ></CustomInput>
+          <CustomInput
+            name="city"
+            type="text"
+            label="City"
+            control={form.control}
+          ></CustomInput>
+          <CustomInput
+            name="postalCode"
+            type="text"
+            label="PostCode"
             control={form.control}
           ></CustomInput>
 
-          <Button type="submit">Submitting</Button>
+          <Button type="submit">Submit</Button>
         </form>
       </Form>
     </div>

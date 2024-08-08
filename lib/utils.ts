@@ -24,6 +24,20 @@ export const authFormSchema = z
     currentPassword: z.string().optional(),
     newPassword: z.string().optional(),
     confirmNewPassword: z.string().optional(),
+    address: z.string().min(1, "Address is required").optional(),
+    country: z.string().min(1, "Country is required").optional(),
+    postalCode: z
+      .string()
+      .regex(
+        /^(\d{5}(-\d{4})?|[A-Z]\d[A-Z] \d[A-Z]\d|[A-Z]{1,2}\d[A-Z\d]? \d[A-Z]{2}|\d{4,6}|\d{3}-\d{4})$/,
+        "Invalid postal code format"
+      )
+      .optional(),
+    city: z.string().min(1, "City is required").optional(),
+    mobileNumber: z
+      .string()
+      .regex(/^\d{10,15}$/, "Mobile number must be between 10 and 15 digits")
+      .optional(),
   })
   .refine((data) => (data.password ? data.password.length >= 8 : true), {
     message: "Password must be at least 8 characters long",

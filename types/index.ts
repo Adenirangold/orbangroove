@@ -1,38 +1,12 @@
-import mongoose, { Schema, Document } from "mongoose";
+import { Types } from "mongoose";
 
 export interface AccountType {
-  userId: mongoose.Schema.Types.ObjectId;
-
-  address: {
-    street: string;
-    city: string;
-    state: string;
-    postalCode: string;
-    country: string;
-  };
-  phone: string;
-  orderHistory: [
-    {
-      orderId: mongoose.Schema.Types.ObjectId;
-      date: Date;
-      totalAmount: number;
-      items: [
-        {
-          productId: mongoose.Schema.Types.ObjectId;
-          quantity: number;
-          price: number;
-        }
-      ];
-    }
-  ];
-  paymentMethods: [
-    {
-      cardType: string;
-      cardNumber: string;
-      expiryDate: string;
-      cardHolderName: string;
-    }
-  ];
+  userId?: string;
+  city?: string;
+  postalCode?: string;
+  country?: string;
+  address?: string;
+  mobileNumber?: string;
 }
 
 export interface UserType {

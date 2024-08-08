@@ -25,6 +25,7 @@ interface SelectInput {
   items?: string[];
   placeholder?: string;
   defaultVal?: string;
+  label?: string;
 }
 function CustomSelect({
   control,
@@ -32,6 +33,7 @@ function CustomSelect({
   name,
   placeholder,
   defaultVal,
+  label,
 }: SelectInput) {
   return (
     <FormField
@@ -39,6 +41,8 @@ function CustomSelect({
       name={name}
       render={({ field }) => (
         <FormItem>
+          <FormLabel>{label}</FormLabel>
+
           <Select
             onValueChange={field.onChange}
             defaultValue={defaultVal ? defaultVal : field.value}
