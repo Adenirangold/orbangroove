@@ -1,18 +1,30 @@
+"use client";
+import { AccountType } from "@/types";
 import React from "react";
+import Button from "./button";
+import { useRouter } from "next/navigation";
 
-function Address() {
+function Address({ account }: { account: AccountType }) {
+  const router = useRouter();
+  const handleEdit = () => {
+    router.push("/account/address/edit");
+  };
+
   return (
     <div className="mb-10">
       <div className="flex flex-col gap-3 ">
-        <p>Adeniran gold</p>
-        <p>taoheed road</p>
-        <p>ilorin</p>
-        <p>240027</p>
-        <p>Nigeria</p>
+        <span className="flex gap-2">
+          <p>{account.firstName}</p>
+          <p>{account.lastName}</p>
+        </span>
+        <p>{account.address}</p>
+        <p>{account.city}</p>
+        <p>{account.postalCode}</p>
+        <p>{account.country}</p>
+        <p>{account.mobileNumber}</p>
       </div>
       <div className=" mt-5 flex gap-3">
-        <button className="border border-black px-3">edit</button>
-        <button className="border border-black px-3">delete</button>
+        <Button onClick={handleEdit} text="edit"></Button>
       </div>
     </div>
   );

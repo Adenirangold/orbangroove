@@ -27,12 +27,29 @@ export const createAccount = async ({
   }
 };
 
+export const updateAccount = async ({
+  city,
+  address,
+  country,
+  mobileNumber,
+  postalCode,
+  userId,
+}: AccountType) => {
+  try {
+    await connectToDb();
+    await Account.updateOne(
+      { userId: userId },
+      { city, address, country, mobileNumber, postalCode }
+    );
+  } catch (err) {}
+};
+
 export const getAccount = async (userId: UserType) => {
   try {
     await connectToDb();
     const account = await Account.findOne({ userId: userId });
     return account;
   } catch (err) {
-    console.log("Gettin user imposible");
+    console.log("Gettin account imposible");
   }
 };

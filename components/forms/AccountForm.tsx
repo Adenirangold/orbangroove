@@ -13,16 +13,18 @@ import { authFormSchema } from "@/lib/utils";
 
 import CustomSelect from "../CustomSelect";
 import { countryName } from "@/constant/countries";
-import { createAccount } from "@/actions/accountAction";
+import { createAccount, updateAccount } from "@/actions/accountAction";
 import { AccountType, UserType } from "@/types";
+import { useRouter } from "next/navigation";
 
 function AccountForm({
   user,
   account,
 }: {
   user: UserType;
-  account: AccountType;
+  account?: AccountType;
 }) {
+  const router = useRouter();
   const form = useForm<z.infer<typeof authFormSchema>>({
     resolver: zodResolver(authFormSchema),
     defaultValues: {
@@ -40,14 +42,26 @@ function AccountForm({
     console.log(values);
     const { city, address, country, mobileNumber, postalCode } = values;
     try {
-      await createAccount({
-        userId: user.id,
-        city,
-        country,
-        address,
-        mobileNumber,
-        postalCode,
-      });
+      if (account) {
+        await updateAccount({
+          userId: user?.id,
+          city,
+          country,
+          address,
+          mobileNumber,
+          postalCode,
+        });
+      } else {
+        await createAccount({
+          userId: user?.id,
+          city,
+          country,
+          address,
+          mobileNumber,
+          postalCode,
+        });
+      }
+      router.push("/account/address");
     } catch (err) {
       console.log(err);
     }
@@ -103,7 +117,7 @@ function AccountForm({
             control={form.control}
           ></CustomInput>
 
-          <Button type="submit">Submit</Button>
+          <Button type="submit">{account ? "edit" : "add"}</Button>
         </form>
       </Form>
     </div>

@@ -3,6 +3,7 @@ import { getUser } from "@/actions/userAction";
 import Address from "@/components/Address";
 import AccountForm from "@/components/forms/AccountForm";
 import { AccountType, UserType } from "@/types";
+import { redirect } from "next/navigation";
 
 import React from "react";
 
@@ -10,6 +11,9 @@ async function page() {
   const { _id, firstName, lastName } = await getUser();
   const userId = _id?.toString();
   const userAccount = await getAccount(userId);
+  if (!userAccount) {
+    redirect("/account/address/add");
+  }
   const { city, postalCode, address, mobileNumber, country } = userAccount;
 
   const account: AccountType = {

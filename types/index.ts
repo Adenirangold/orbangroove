@@ -1,6 +1,6 @@
 import { Types } from "mongoose";
 
-export interface AccountType {
+export interface AccountType extends UserType {
   userId?: string;
   city?: string;
   postalCode?: string;
