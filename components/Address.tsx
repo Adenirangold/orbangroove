@@ -1,8 +1,8 @@
 "use client";
 import { AccountType } from "@/types";
 import React from "react";
-import Button from "./button";
 import { useRouter } from "next/navigation";
+import Button from "./Button";
 
 function Address({ account }: { account: AccountType }) {
   const router = useRouter();

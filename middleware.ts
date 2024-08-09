@@ -5,7 +5,11 @@ export async function middleware(request: NextRequest) {
   const token = request.cookies.get("token")?.value;
 
   if (!token) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    // return NextResponse.redirect(new URL("/login", request.url));
+    const originalUrl = request.nextUrl.pathname;
+    return NextResponse.redirect(
+      new URL(`/login?redirect=${encodeURIComponent(originalUrl)}`, request.url)
+    );
   }
 
   try {

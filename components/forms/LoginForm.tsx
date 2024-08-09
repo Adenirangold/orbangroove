@@ -11,10 +11,12 @@ import { Form } from "@/components/ui/form";
 import CustomInput from "../CustomInput";
 import { authFormSchema } from "@/lib/utils";
 import { login } from "@/actions/userAction";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectSearchParam = searchParams.get("redirect");
 
   const form = useForm<z.infer<typeof authFormSchema>>({
     resolver: zodResolver(authFormSchema),
@@ -30,7 +32,7 @@ function LoginForm() {
 
     const result = await login({ email, password });
     if (result.redirect) {
-      router.push(result.redirect);
+      router.push(redirectSearchParam!);
     }
   }
 

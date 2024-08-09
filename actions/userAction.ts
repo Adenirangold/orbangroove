@@ -60,6 +60,7 @@ export const login = async function ({ email, password }: UserType) {
       maxAge: 1 * 24 * 60 * 60,
       sameSite: "strict",
     });
+
     return { redirect: "/" };
   } catch (err) {
     return { error: "Internal server error" };
