@@ -1,4 +1,6 @@
 import React from "react";
+import "react-phone-number-input/style.css";
+import PhoneInput from "react-phone-number-input";
 
 import { Control, FieldPath } from "react-hook-form";
 import * as z from "zod";
@@ -12,7 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { authFormSchema } from "@/lib/utils";
+import { authFormSchema } from "@/lib/validation";
 
 interface CustomInput {
   control: Control<z.infer<typeof authFormSchema>>;

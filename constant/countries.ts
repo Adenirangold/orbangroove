@@ -660,5 +660,5 @@ export const country = [
 ];
 
 export const countryName = country.map((item) => {
-  return item.name;
+  return { name: item.name, flag: item.flag };
 });

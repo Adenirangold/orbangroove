@@ -4,20 +4,22 @@ import { getUser } from "@/actions/userAction";
 import React from "react";
 
 async function page() {
-  const data = await getUser();
+  const userData = await getUser();
 
-  if (!data) {
+  if (!userData) {
     console.log("Token expired");
     return;
   }
 
+  const { _id, email, firstName, lastName, dateOfBirth, gender } = userData;
+
   const user = {
-    id: data?._id?.toString(),
-    email: data?.email,
-    firstName: data?.firstName,
-    lastName: data?.lastName,
-    dateOfBirth: data?.dateOfBirth,
-    gender: data?.gender,
+    id: _id?.toString(),
+    email,
+    firstName,
+    lastName,
+    dateOfBirth,
+    gender,
   };
 
   return (

@@ -14,7 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import CustomInput from "../CustomInput";
-import { authFormSchema } from "@/lib/utils";
+import { authFormSchema } from "@/lib/validation";
 import { updateUser } from "@/actions/userAction";
 import { useRouter } from "next/navigation";
 import CustomSelect from "../CustomSelect";

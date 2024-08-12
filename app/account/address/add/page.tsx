@@ -1,13 +1,18 @@
-import { getAccount } from "@/actions/accountAction";
 import { getUser } from "@/actions/userAction";
 import AccountForm from "@/components/forms/AccountForm";
-import { AccountType, UserType } from "@/types";
-import { useRouter } from "next/navigation";
+import { UserType } from "@/types";
+import { redirect } from "next/navigation";
 
 import React from "react";
 
 async function page() {
-  const { _id, firstName, lastName } = await getUser();
+  const userData = await getUser();
+  const { _id, firstName, lastName } = userData;
+  if (userData.error) {
+    console.error("Error fetching user:", userData.error);
+    redirect("/");
+  }
+
   const userId = _id?.toString();
 
   const signedUser: UserType = {

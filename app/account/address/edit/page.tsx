@@ -8,7 +8,12 @@ import { redirect } from "next/navigation";
 import React from "react";
 
 async function page() {
-  const { _id, firstName, lastName } = await getUser();
+  const userData = await getUser();
+  const { _id, firstName, lastName } = userData;
+
+  if (userData.error) {
+    console.error("Error fetching user:", userData.error);
+  }
   const userId = _id?.toString();
   const userAccount = await getAccount(userId);
   if (!userAccount) {

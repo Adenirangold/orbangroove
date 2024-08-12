@@ -6,6 +6,7 @@ import { connectToDb } from "@/utils/database";
 import { sign } from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { sendEmailAction } from "./sendEmailAction";
+import { revalidatePath } from "next/cache";
 
 export const createUser = async function ({
   lastName,
@@ -29,8 +30,9 @@ export const createUser = async function ({
 
     return { redirect: "/login" };
   } catch (err) {
-    console.log(err);
-    return { error: "Internal server error" };
+    console.error("Error creating user:", err);
+
+    return { error: "An error occurred while creating the user." };
   }
 };
 
@@ -63,14 +65,20 @@ export const login = async function ({ email, password }: UserType) {
 
     return { redirect: "/" };
   } catch (err) {
-    return { error: "Internal server error" };
+    console.error("Error during login:", err);
+
+    return { error: "An error occurred during login." };
   }
 };
 
 export const signOutAction = async function () {
-  cookies().delete("token");
+  try {
+    cookies().delete("token");
 
-  console.log("signed out");
+    console.log("User has been signed out successfully.");
+  } catch (err) {
+    console.error("Error during sign-out:", err);
+  }
 };
 
 export async function updateUser({
@@ -83,38 +91,49 @@ export async function updateUser({
 }: UserType) {
   try {
     await connectToDb();
+    if (!id) {
+      return { error: "User ID is required" };
+    }
     const result = await User.updateOne(
       { _id: id },
       {
         lastName,
         firstName,
         email,
-
         gender,
         dateOfBirth,
       }
     );
+    revalidatePath("/account/address");
     return result;
   } catch (error) {
     console.log(error);
 
-    return { error: "Invalid credentials" };
+    console.error("Error updating user:", error);
+
+    return { error: "An error occurred while updating the user." };
   }
 }
 export const getUser = async () => {
   try {
     const token = cookies().get("token")?.value;
+    if (!token) {
+      console.error("Token not found");
+      return { error: "Token not provided" };
+    }
     await connectToDb();
     const payload = await verifyToken(token!);
     const user = await User.findById(payload.userId);
 
     if (!user) {
-      return { error: "Invalid Token" };
+      console.error("User not found for the provided token");
+      return { error: "Invalid token" };
     }
     return user;
   } catch (err) {
-    console.log("No User Found");
-    return { error: "Invalid Token" };
+    console.error("Error retrieving user:", err);
+
+    return { error: "Invalid token or internal error" };
   }
 };
 
@@ -122,27 +141,30 @@ export async function changePassword({ password, newPassword }: UserType) {
   try {
     const signedUser = await getUser();
     if (!signedUser) {
-      console.log("user not logged in");
-      return { error: "User Not Logged In" };
+      console.error("User not logged in");
+      return { error: "User not logged in" };
     }
     const user = await User.findOne({ email: signedUser.email }).select(
       "password"
     );
     if (!user) {
-      console.log("user does not exist");
-      return { error: "User does not exist" };
+      console.error("User does not exist");
+      return { error: "Invalid Credential" };
     }
     const passwordMatch = await compare(password, user?.password);
     if (!passwordMatch) {
-      console.log("current password is not correct");
-      return { error: "current password is not correct" };
+      console.error("Current password is not correct");
+      return { error: "Current password is not correct" };
     }
     const hashedPassword = await hashed(newPassword);
     await User.findOneAndUpdate(
       { email: signedUser.email },
       { password: hashedPassword }
     );
+    console.log("Password changed successfully");
+    return { success: "Password changed successfully" };
   } catch (error) {
-    console.log("error in changing password");
+    console.error("Error changing password:", error);
+    return { error: "An error occurred while changing the password" };
   }
 }

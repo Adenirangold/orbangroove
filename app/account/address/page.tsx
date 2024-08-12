@@ -7,11 +7,22 @@ import { redirect } from "next/navigation";
 import React from "react";
 
 async function page() {
-  const { _id, firstName, lastName } = await getUser();
+  const userData = await getUser();
+  const { _id, firstName, lastName } = userData;
+
+  if (userData.error) {
+    console.error("Error fetching user:", userData.error);
+  }
+
+  if (!_id) {
+    console.error("User ID is missing");
+  }
+
   const userAccount = await getAccount(_id?.toString());
-  if (!userAccount) {
+  if (userAccount.error) {
     redirect("/account/address/add");
   }
+
   const account: AccountType = {
     city: userAccount.city,
     address: userAccount.address,

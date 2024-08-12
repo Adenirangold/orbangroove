@@ -1,6 +1,5 @@
 import SignUpForm from "@/components/forms/SignUpForm";
 import SignOutButton from "@/components/SignOutButton";
-import { getUser } from "@/lib/action";
 import React from "react";
 
 async function page() {

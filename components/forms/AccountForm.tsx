@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 
 import CustomInput from "../CustomInput";
-import { authFormSchema } from "@/lib/utils";
+import { authFormSchema } from "@/lib/validation";
 
 import CustomSelect from "../CustomSelect";
 import { countryName } from "@/constant/countries";
@@ -85,12 +85,14 @@ function AccountForm({
             label="Last Name"
             control={form.control}
           ></CustomInput>
+
           <CustomInput
             name="mobileNumber"
             type="number"
             label="Mobile"
             control={form.control}
           ></CustomInput>
+
           <CustomSelect
             control={form.control}
             placeholder="Please select"

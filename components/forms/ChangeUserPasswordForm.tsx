@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 
 import CustomInput from "../CustomInput";
-import { authFormSchema } from "@/lib/utils";
+import { authFormSchema } from "@/lib/validation";
 import { useRouter } from "next/navigation";
 import { changePassword } from "@/actions/userAction";
 
